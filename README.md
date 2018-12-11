@@ -1,5 +1,4 @@
 # PIB: Parametric Information Bottleneck  
-<<<<<<< HEAD
 [PIB (Parametric Information Bottleneck)](https://arxiv.org/abs/1712.01272) is a framework that fully incorporates at layer level the Information Bottleneck principle into the training of a stochastic neural network.
 
 ## Setup   
@@ -12,18 +11,7 @@
 
 ## Changelog   
 ### Version 1.2 (2018/10)
-* Migated to Keras with improved readability, added Bernoulli and Gaussian PIB layers, and  modified Keras training routines (which is helpful for training stochastic neural networks in general).
-=======
-[PIB (Parametric Information Bottleneck)](https://arxiv.org/abs/1712.01272) is a framework that fully incorporates the Information Bottleneck principle into the training of a neural network on layer level.
-
-## Setup 
-`python setup.py install`  
-`pip install -r requirement.txt`   
-
-## Changelog   
-### Version 1.2 (2018/10)
-* Migated to Keras with improved readability and added Bernoulli and Gaussian PIB layers and modified Keras training routines.
->>>>>>> 83317ae7de1dac00c830035a8988f2be6cef740f
+* Migated to Keras with improved readability, added Bernoulli and Gaussian PIB layers, and  modified Keras training routines (which is helpful for training stochastic neural networks in general).  
 ### Version 1.1 (2018/05)
 * Migated to native Tensorflow. 
 ### Version 1.0 (2017/10)  
