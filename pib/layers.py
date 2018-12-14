@@ -43,6 +43,12 @@ class StochasticLayer(Layer):
         return dict(list(base_config.items()) + list(config.items()))
         
 class BernoulliStochasticLayer(StochasticLayer):
+    def __init__(self, discrete_grad_relax={'raiko':''}, **kwargs):
+        super(BernoulliStochasticLayer, self).__init__(**kwargs)
+        self._implemented_discrete_grad_relax = ['raiko', 'gummbel']
+        assert discrete_grad_relax.keys()[0] in self._implemented_discrete_grad_relax, "Unrecognized `discrete_grad_relax`. Currently allowed {}".format(self._implemented_discrete_grad_relax)
+        self.discrete_grad_relax=discrete_grad_relax
+
     def build(self, input_shape):
         if self.beta > 0:
             self.prior = K.sigmoid(self.add_weight(shape=tuple(input_shape[-self.feature_rank:]),
@@ -52,17 +58,24 @@ class BernoulliStochasticLayer(StochasticLayer):
                                   name='pior'))
         super(BernoulliStochasticLayer, self).build(input_shape)
     def call(self, inputs):
-        out_shape = super(BernoulliStochasticLayer, self).call(inputs)
-        eps = K.random_uniform(out_shape, seed=2019)
+        if self.beta > 0:
+            mi = bernoulli_compression(inp, self.prior)
+            self.add_loss(self.beta * mi, inputs=inputs)
         inp = K.sigmoid(inputs)
         p = K.expand_dims(inp,  -(self.feature_rank+1))
-        y = K.cast( (p - eps) > 0, dtype='float32' )
-        z = p + K.stop_gradient(y - p)
-        if self.beta > 0: 
-            prior = self.prior
-            mi = bernoulli_compression(inp, prior)
-            self.add_loss(self.beta * mi, inputs=inputs)
-        return z
+        out_shape = super(BernoulliStochasticLayer, self).call(inputs)
+        if self.discrete_grad_relax.keys()[0] == 'raiko':
+            eps = K.random_uniform(out_shape, seed=2019)
+            y = K.cast( (p - eps) > 0, dtype='float32' )
+            z = p + K.stop_gradient(y - p)
+            return z
+        else: # Gumbel Trick with temperature: https://arxiv.org/abs/1611.00712
+            assert self.discrete_grad_relax.keys()[0] == 'gumbel' 
+            temperature = self.discrete_grad_relax['gumbel']
+            assert temperature > 0 
+            eps = K.random_uniform(out_shape, minval=1e-8, seed=2019)
+            z = K.sigmoid(  (K.log(p + 1e-8) - K.log(1 - p + 1e-8) + K.log(eps) - K.log(1-eps)) / temperature ) 
+            return z
 
 class GaussianStochasticLayer(StochasticLayer):
     def build(self, input_shape):

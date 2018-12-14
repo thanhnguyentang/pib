@@ -2,7 +2,7 @@
 beta1=0.0001
 beta2=0.0001
 device=1
-gamma1=0.8
+gamma1=1.0
 gamma2=1.0
 opt="adamax"
 lr=0.01
