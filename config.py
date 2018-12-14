@@ -69,6 +69,10 @@ flags.DEFINE_float('l1_prior_reg', 0, 'L1 prior regularization.')
 flags.DEFINE_float('l2_prior_reg', 0, 'L1 pripr regularization.')
 flags.DEFINE_bool('run_det', True, 'Whether to evaluate the deterministic equivalent model at test.')
 flags.DEFINE_integer('n_runs', 100, 'Number of times to run the stochastice model on a test set.')
+flags.DEFINE_string('discrete_grad_relax', 'raiko', 'Relaxation of discrete variables for estimating gradients.')
+flags.DEFINE_float('temperature', 1.0, 'Temperature in Gumbel Trick.')
+
+
 
 def main(_):
     config = infer_and_assert_cfg(flags.FLAGS) 

@@ -34,7 +34,7 @@ def get_berdense_model(config):
     z = inputs
     for i in range(len(config.n_particles)):
         h = Dense(config.layer_sizes[i+1],kernel_regularizer=kernel_regularizer, kernel_initializer=initializers.glorot_uniform(seed=2019))(z)
-        z = BernoulliStochasticLayer(config.n_particles[i], 1, weighted_betas[i])(h)
+        z = BernoulliStochasticLayer(discrete_grad_relax=config.discrete_grad_relax, temperature=config.temperature, n_samples=config.n_particles[i], feature_rank=1, beta=weighted_betas[i])(h)
     outputs = Dense(config.layer_sizes[-1], name='main_output', kernel_initializer=initializers.glorot_uniform(seed=2019))(z)
     model = Model(inputs=inputs, outputs= outputs, name=config.model_name)
 
