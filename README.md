@@ -1,5 +1,5 @@
-# PIB: Parametric Information Bottleneck  
-[PIB (Parametric Information Bottleneck)](https://arxiv.org/abs/1712.01272) is a framework that fully incorporates at layer level the Information Bottleneck principle into the training of a stochastic neural network.
+# Markov Information Bottleneck  
+[Markov Information Bottleneck](https://www.mdpi.com/1099-4300/21/10/976) is a framework that fully incorporates at layer level the Information Bottleneck principle into the training of a stochastic neural network.
 
 ## Setup   
 `pip install -r requirement.txt`    
